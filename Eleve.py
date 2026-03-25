@@ -8,6 +8,21 @@ def ajout_4_matiere(cls):
     cls.__init__ = __init__
     return cls
 
+
+def ajout_4_matiere_iterator(cls):
+    class MatterIterator_4(Iterator):
+        def __init__(self, students):
+            self._students = sorted(students, key=lambda s: s.matiere_4, reverse=True)
+            self._index = 0
+        def __next__(self):
+            if self._index < len(self._students):
+                res = self._students[self._index]
+                self._index += 1
+                return res
+            raise StopIteration
+    cls.get_matiere_4 = lambda self: MatterIterator_4(self.students)
+    return cls
+
 @ajout_4_matiere
 class Student:
     def __init__(self, nom, Archi_appli, Monitoring, Integr_Continue):
