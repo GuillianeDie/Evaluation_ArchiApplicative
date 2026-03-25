@@ -1,3 +1,4 @@
+import abc
 from collections.abc import Iterable, Iterator
 
 def ajout_4_matiere(cls):
@@ -22,7 +23,7 @@ def ajout_4_matiere_iterator(cls):
     cls.get_matiere_4 = lambda self: MatterIterator_4(self.students)
     return cls
 
-class Singleton(type):
+class Singleton(abc.ABCMeta):
     _instances = {}
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
