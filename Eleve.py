@@ -12,9 +12,33 @@ class Student:
         return f"Student({self.nom}, {self.Archi_appli}, {self.Monitoring}, {self.Integr_Continue})"
     
 
-class MatterIterator(Iterator):
+class MatterIterator_Archi_appli(Iterator):
     def __init__(self, students):
         self._students = sorted(students, key=lambda s: s.Archi_appli, reverse=True)
+        self._index = 0
+
+    def __next__(self):
+        if self._index < len(self._students):
+            res = self._students[self._index]
+            self._index += 1
+            return res
+        raise StopIteration
+    
+class MatterIterator_Monitoring(Iterator):
+    def __init__(self, students):
+        self._students = sorted(students, key=lambda s: s.Monitoring, reverse=True)
+        self._index = 0
+
+    def __next__(self):
+        if self._index < len(self._students):
+            res = self._students[self._index]
+            self._index += 1
+            return res
+        raise StopIteration
+    
+class MatterIterator_Integr_Continue(Iterator):
+    def __init__(self, students):
+        self._students = sorted(students, key=lambda s: s.Integr_Continue, reverse=True)
         self._index = 0
 
     def __next__(self):
@@ -32,7 +56,13 @@ class Class(Iterable):
         self.students.append(student)
 
     def __iter__(self):
-        return MatterIterator(self.students)
+        return MatterIterator_Archi_appli(self.students)
+    
+    def get_Monitoring(self):
+        return MatterIterator_Monitoring(self.students)
+    
+    def get_Integr_Continue(self):
+        return MatterIterator_Integr_Continue(self.students)
 
  #   def rank_matter_1(self):
  #       return sorted(self.students, key=lambda s: s.Archi_appli, reverse=True)
@@ -50,6 +80,10 @@ if __name__ == '__main__':
     school_class.add_student(Student('V', 9, 14, 14))
 
     for student in school_class:
+        print(student)
+    for student in school_class.get_Monitoring():
+        print(student)
+    for student in school_class.get_Integr_Continue():
         print(student)
 
 
