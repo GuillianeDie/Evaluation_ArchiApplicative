@@ -8,7 +8,6 @@ def ajout_4_matiere(cls):
     cls.__init__ = __init__
     return cls
 
-
 def ajout_4_matiere_iterator(cls):
     class MatterIterator_4(Iterator):
         def __init__(self, students):
@@ -23,6 +22,13 @@ def ajout_4_matiere_iterator(cls):
     cls.get_matiere_4 = lambda self: MatterIterator_4(self.students)
     return cls
 
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
+
 @ajout_4_matiere
 class Student:
     def __init__(self, nom, Archi_appli, Monitoring, Integr_Continue):
@@ -32,14 +38,12 @@ class Student:
         self.Integr_Continue = Integr_Continue
 
     def __repr__(self):
-        return f"Student({self.nom}, {self.Archi_appli}, {self.Monitoring}, {self.Integr_Continue})"
-    
+        return f"Student({self.nom}, {self.Archi_appli}, {self.Monitoring}, {self.Integr_Continue}, {self.matiere_4})"
 
 class MatterIterator_Archi_appli(Iterator):
     def __init__(self, students):
         self._students = sorted(students, key=lambda s: s.Archi_appli, reverse=True)
         self._index = 0
-
     def __next__(self):
         if self._index < len(self._students):
             res = self._students[self._index]
@@ -51,7 +55,6 @@ class MatterIterator_Monitoring(Iterator):
     def __init__(self, students):
         self._students = sorted(students, key=lambda s: s.Monitoring, reverse=True)
         self._index = 0
-
     def __next__(self):
         if self._index < len(self._students):
             res = self._students[self._index]
@@ -63,7 +66,6 @@ class MatterIterator_Integr_Continue(Iterator):
     def __init__(self, students):
         self._students = sorted(students, key=lambda s: s.Integr_Continue, reverse=True)
         self._index = 0
-
     def __next__(self):
         if self._index < len(self._students):
             res = self._students[self._index]
@@ -71,7 +73,8 @@ class MatterIterator_Integr_Continue(Iterator):
             return res
         raise StopIteration
 
-class Class(Iterable):
+@ajout_4_matiere_iterator
+class Class(Iterable, metaclass=Singleton):
     def __init__(self):
         self.students = []
 
@@ -87,22 +90,14 @@ class Class(Iterable):
     def get_Integr_Continue(self):
         return MatterIterator_Integr_Continue(self.students)
 
- #   def rank_matter_1(self):
- #       return sorted(self.students, key=lambda s: s.Archi_appli, reverse=True)
-    
- #   def rank_matter_2(self):
- #       return sorted(self.students, key=lambda s: s.Monitoring, reverse=True)
-    
- #   def rank_matter_3(self):
-#        return sorted(self.students, key=lambda s: s.Integr_Continue, reverse=True)
-
-
-
 if __name__ == '__main__':
     school_class = Class()
-    school_class.add_student(Student('J', 10, 12, 13))
-    school_class.add_student(Student('A', 8, 2, 17))
-    school_class.add_student(Student('V', 9, 14, 14))
+    school_class.add_student(Student('J', 10, 12, 13, 18))
+    school_class.add_student(Student('A', 8, 2, 17, 5))
+    school_class.add_student(Student('V', 9, 14, 14, 12))
+
+    other_class = Class()
+    print(school_class is other_class)
 
     for student in school_class:
         print(student)
@@ -110,6 +105,5 @@ if __name__ == '__main__':
         print(student)
     for student in school_class.get_Integr_Continue():
         print(student)
-
-
-
+    for student in school_class.get_matiere_4():
+        print(student)
