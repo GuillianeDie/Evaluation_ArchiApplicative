@@ -1,3 +1,6 @@
+from collections.abc import Iterable, Iterator
+
+
 class Student:
     def __init__(self, nom, Archi_appli, Monitoring, Integr_Continue):
         self.nom = nom
@@ -7,22 +10,38 @@ class Student:
 
     def __repr__(self):
         return f"Student({self.nom}, {self.Archi_appli}, {self.Monitoring}, {self.Integr_Continue})"
+    
 
-class Class:
+class MatterIterator(Iterator):
+    def __init__(self, students):
+        self._students = sorted(students, key=lambda s: s.Archi_appli, reverse=True)
+        self._index = 0
+
+    def __next__(self):
+        if self._index < len(self._students):
+            res = self._students[self._index]
+            self._index += 1
+            return res
+        raise StopIteration
+
+class Class(Iterable):
     def __init__(self):
         self.students = []
 
     def add_student(self, student):
         self.students.append(student)
 
-    def rank_matter_1(self):
-        return sorted(self.students, key=lambda s: s.Archi_appli, reverse=True)
+    def __iter__(self):
+        return MatterIterator(self.students)
+
+ #   def rank_matter_1(self):
+ #       return sorted(self.students, key=lambda s: s.Archi_appli, reverse=True)
     
-    def rank_matter_2(self):
-        return sorted(self.students, key=lambda s: s.Monitoring, reverse=True)
+ #   def rank_matter_2(self):
+ #       return sorted(self.students, key=lambda s: s.Monitoring, reverse=True)
     
-    def rank_matter_3(self):
-        return sorted(self.students, key=lambda s: s.Integr_Continue, reverse=True)
+ #   def rank_matter_3(self):
+#        return sorted(self.students, key=lambda s: s.Integr_Continue, reverse=True)
 
 if __name__ == '__main__':
     school_class = Class()
@@ -30,9 +49,8 @@ if __name__ == '__main__':
     school_class.add_student(Student('A', 8, 2, 17))
     school_class.add_student(Student('V', 9, 14, 14))
 
-    print(school_class.rank_matter_1())
-    print(school_class.rank_matter_2())
-    print(school_class.rank_matter_3())
+    for student in school_class:
+        print(student)
 
 
 
