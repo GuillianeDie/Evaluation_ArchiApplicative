@@ -1,6 +1,14 @@
 from collections.abc import Iterable, Iterator
 
+def ajout_4_matiere(cls):
+    orig_init = cls.__init__
+    def __init__(self, nom, Archi_appli, Monitoring, Integr_Continue, matiere_4=0):
+        orig_init(self, nom, Archi_appli, Monitoring, Integr_Continue)
+        self.matiere_4 = matiere_4
+    cls.__init__ = __init__
+    return cls
 
+@ajout_4_matiere
 class Student:
     def __init__(self, nom, Archi_appli, Monitoring, Integr_Continue):
         self.nom = nom
@@ -72,6 +80,8 @@ class Class(Iterable):
     
  #   def rank_matter_3(self):
 #        return sorted(self.students, key=lambda s: s.Integr_Continue, reverse=True)
+
+
 
 if __name__ == '__main__':
     school_class = Class()
