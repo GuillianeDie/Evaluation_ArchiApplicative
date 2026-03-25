@@ -17,6 +17,12 @@ class Class:
 
     def rank_matter_1(self):
         return sorted(self.students, key=lambda s: s.Archi_appli, reverse=True)
+    
+    def rank_matter_2(self):
+        return sorted(self.students, key=lambda s: s.Monitoring, reverse=True)
+    
+    def rank_matter_3(self):
+        return sorted(self.students, key=lambda s: s.Integr_Continue, reverse=True)
 
 if __name__ == '__main__':
     school_class = Class()
@@ -25,6 +31,8 @@ if __name__ == '__main__':
     school_class.add_student(Student('V', 9, 14, 14))
 
     print(school_class.rank_matter_1())
+    print(school_class.rank_matter_2())
+    print(school_class.rank_matter_3())
 
 
 
